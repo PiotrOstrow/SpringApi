@@ -39,8 +39,6 @@ public class Controller {
 		return service.create(cityDto);
 	}
 
-	// TODO: POST with specific ID?
-
 	@PutMapping("/city/{id}")
 	public CityDto put(@RequestBody CityDto cityDto, @PathVariable long id) {
 		return service.replace(cityDto, id);

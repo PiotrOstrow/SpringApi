@@ -2,18 +2,24 @@ package org.example.api.model;
 
 public class CityDto {
 
-	private int id;
+	private long id;
 
 	private String city;
 	private String country;
 
 	public CityDto() {}
 
-	public int getId() {
+	public CityDto(long id, String city, String country) {
+		this.id = id;
+		this.city = city;
+		this.country = country;
+	}
+
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
