@@ -7,6 +7,9 @@ import com.example.api.util.CountryCodeMap;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -22,11 +25,14 @@ public class ApiService {
 	private final WebClient webClient;
 	private final CountryCodeMap countryCodeMap;
 	private final ObjectMapper objectMapper;
+	private final WebClient.Builder loadBalancedWebClientBuilder;
 
-	public ApiService(WebClient webClient, CountryCodeMap countryCodeMap, ObjectMapper objectMapper) {
+	public ApiService(WebClient webClient, CountryCodeMap countryCodeMap, ObjectMapper objectMapper,
+					  WebClient.Builder loadBalancedWebClientBuilder) {
 		this.webClient = webClient;
 		this.countryCodeMap = countryCodeMap;
 		this.objectMapper = objectMapper;
+		this.loadBalancedWebClientBuilder = loadBalancedWebClientBuilder;
 	}
 
 	public Object search(String searchTerm) {
@@ -93,14 +99,6 @@ public class ApiService {
 	}
 
 	private City[] getCities(String searchTerm) {
-		return webClient.get()
-				.uri(uriBuilder -> uriBuilder.scheme("http")
-						.host("localhost")
-						.port(80)
-						.path("/search/")
-						.path(searchTerm).build())
-				.retrieve()
-				.onStatus(httpStatus ->  httpStatus.equals(HttpStatus.NOT_FOUND), clientResponse -> Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)))
-				.bodyToMono(City[].class).block();
+		return loadBalancedWebClientBuilder.build().get().uri("http://cities-api/search/" + searchTerm).retrieve().bodyToMono(City[].class).block();
 	}
 }
