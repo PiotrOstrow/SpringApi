@@ -1,5 +1,6 @@
 package com.example.api.services;
 
+import com.example.api.config.ApiConfiguration;
 import com.example.api.model.city.City;
 import com.example.api.model.weather.Weather;
 import com.example.api.model.weather.WeatherData;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
+import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
@@ -20,19 +22,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@EnableRetry
 public class ApiService {
 
 	private final WebClient webClient;
 	private final CountryCodeMap countryCodeMap;
 	private final ObjectMapper objectMapper;
 	private final WebClient.Builder loadBalancedWebClientBuilder;
+	private final ApiConfiguration apiConfiguration;
 
 	public ApiService(WebClient webClient, CountryCodeMap countryCodeMap, ObjectMapper objectMapper,
-					  WebClient.Builder loadBalancedWebClientBuilder) {
+					  WebClient.Builder loadBalancedWebClientBuilder, ApiConfiguration apiConfiguration) {
 		this.webClient = webClient;
 		this.countryCodeMap = countryCodeMap;
 		this.objectMapper = objectMapper;
 		this.loadBalancedWebClientBuilder = loadBalancedWebClientBuilder;
+		this.apiConfiguration = apiConfiguration;
 	}
 
 	public Object search(String searchTerm) {
@@ -90,8 +95,8 @@ public class ApiService {
 						.host("api.openweathermap.org")
 						.path("/data/2.5/weather")
 						.queryParam("q", "{cityName},{countryCode}")
-						.queryParam("units", "metric")
-						.queryParam("appid", "1727c443ffe3e768eb9fe74538f5def4")
+						.queryParam("units", apiConfiguration.getUnits())
+						.queryParam("appid", apiConfiguration.getKey())
 						.build(cityName, countryCode))
 				.retrieve()
 				.onStatus(httpStatus -> httpStatus.equals(HttpStatus.NOT_FOUND), clientResponse -> Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)))
