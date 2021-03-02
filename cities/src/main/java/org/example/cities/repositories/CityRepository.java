@@ -1,7 +1,7 @@
-package org.example.api.repositories;
+package org.example.cities.repositories;
 
 
-import org.example.api.model.City;
+import org.example.cities.model.City;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

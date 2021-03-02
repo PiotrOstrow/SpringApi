@@ -1,7 +1,7 @@
-package org.example.api.controllers;
+package org.example.cities.controllers;
 
-import org.example.api.model.CityDto;
-import org.example.api.services.Service;
+import org.example.cities.model.CityDto;
+import org.example.cities.services.Service;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;

@@ -1,19 +1,19 @@
-package org.example.api.model;
+package org.example.cities.model;
 
-import javax.persistence.*;
+public class CityDto {
 
-@Entity
-@Table(name="cities", schema = "dbo")
-public class City {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
 	private String city;
 	private String country;
 
-	public City() {}
+	public CityDto() {}
+
+	public CityDto(long id, String city, String country) {
+		this.id = id;
+		this.city = city;
+		this.country = country;
+	}
 
 	public long getId() {
 		return id;

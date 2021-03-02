@@ -1,6 +1,6 @@
-package org.example.api.services;
+package org.example.cities.services;
 
-import org.example.api.model.CityDto;
+import org.example.cities.model.CityDto;
 
 import java.util.List;
 import java.util.Optional;

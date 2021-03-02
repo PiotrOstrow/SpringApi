@@ -1,7 +1,7 @@
-package org.example.api.mappers;
+package org.example.cities.mappers;
 
-import org.example.api.model.City;
-import org.example.api.model.CityDto;
+import org.example.cities.model.City;
+import org.example.cities.model.CityDto;
 import org.mapstruct.Mapper;
 
 import java.util.Optional;

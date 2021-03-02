@@ -1,9 +1,9 @@
-package org.example.api.services;
+package org.example.cities.services;
 
-import org.example.api.mappers.CityMapper;
-import org.example.api.model.City;
-import org.example.api.model.CityDto;
-import org.example.api.repositories.CityRepository;
+import org.example.cities.mappers.CityMapper;
+import org.example.cities.model.City;
+import org.example.cities.model.CityDto;
+import org.example.cities.repositories.CityRepository;
 import org.mapstruct.factory.Mappers;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Service
-public class ServiceImpl implements org.example.api.services.Service {
+public class ServiceImpl implements org.example.cities.services.Service {
 
 	private final CityRepository cityRepository;
 	private final CityMapper mapper = Mappers.getMapper(CityMapper.class);

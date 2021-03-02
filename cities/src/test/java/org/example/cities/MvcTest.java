@@ -1,15 +1,10 @@
-package org.example.api;
+package org.example.cities;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.api.controllers.Controller;
-import org.example.api.model.City;
-import org.example.api.model.CityDto;
-import org.example.api.services.Service;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
+import org.example.cities.controllers.Controller;
+import org.example.cities.model.CityDto;
+import org.example.cities.services.Service;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
