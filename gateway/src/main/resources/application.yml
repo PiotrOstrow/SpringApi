@@ -1,0 +1,29 @@
+server:
+  port: 80
+
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    consul:
+      host: 192.168.10.154
+      discovery:
+        register: false
+        register-health-check: false
+      config:
+        enabled: false
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: city-weather-api
+          uri: lb://city-weather-api
+          predicates:
+            - Path=/weather/**
+          filters:
+            - RewritePath=/weather(?<path>.*), /city/$\{path}
+        - id: test
+          uri: lb://cities-api
+          predicates:
+            - Path=/**
