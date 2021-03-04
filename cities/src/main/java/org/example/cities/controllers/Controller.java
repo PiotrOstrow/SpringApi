@@ -1,5 +1,6 @@
 package org.example.cities.controllers;
 
+import org.apache.commons.lang3.StringUtils;
 import org.example.cities.model.CityDto;
 import org.example.cities.services.Service;
 import org.springframework.http.HttpStatus;
@@ -18,8 +19,10 @@ public class Controller {
 	}
 
 	@GetMapping("/city")
-	public List<CityDto> get() {
-		return service.findAll();
+	public List<CityDto> get(@RequestParam(required = false) String search) {
+		if(StringUtils.isBlank(search))
+			return service.findAll();
+		return service.search(search);
 	}
 
 	@GetMapping("/city/{id}")

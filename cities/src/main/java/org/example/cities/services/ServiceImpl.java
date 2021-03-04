@@ -44,9 +44,9 @@ public class ServiceImpl implements org.example.cities.services.Service {
 	public CityDto create(CityDto cityDto) {
 		if(cityDto == null)
 			throw new RuntimeException("Invalid input");
-		if(cityDto.getCity().isBlank())
+		if(isBlank(cityDto.getCity()))
 			throw new RuntimeException("Invalid city name");
-		if(cityDto.getCountry().isBlank())
+		if(isBlank(cityDto.getCountry()))
 			throw new RuntimeException("Invalid country name");
 
 		// have to find manually because sql server implementation throws plain SqlServerException
