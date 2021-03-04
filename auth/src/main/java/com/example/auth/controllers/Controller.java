@@ -62,6 +62,7 @@ public class Controller {
 				.setSubject(user.getUsername())
 				.setIssuedAt(new Date(now))
 				.setExpiration(new Date(now + jwtConfig.getExpiration() * 1000L))
+
 				.claim("authorities", grantedAuthorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
 				.signWith(SignatureAlgorithm.HS512, jwtConfig.getSecret().getBytes())
 				.compact();

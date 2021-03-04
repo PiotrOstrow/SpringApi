@@ -93,6 +93,8 @@ public class ServiceImpl implements org.example.cities.services.Service {
 
 	@Override
 	public void delete(long id) {
-		//cityRepository.deleteById();
+		if(!cityRepository.existsById(id))
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+		cityRepository.deleteById(id);
 	}
 }

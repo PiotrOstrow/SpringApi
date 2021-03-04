@@ -2,6 +2,7 @@ package com.example.gateway.auth;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -38,7 +39,8 @@ public class SecurityConfiguration {
 				.and()
 				.authorizeExchange()
 				.pathMatchers("/auth/**").permitAll()
-				.anyExchange().authenticated()
+				.pathMatchers(HttpMethod.GET).authenticated()
+				.anyExchange().hasRole("ADMIN") // all but GET  or /auth/** requires admin
 				.and().build();
 	}
 }

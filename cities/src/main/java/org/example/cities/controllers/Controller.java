@@ -53,9 +53,8 @@ public class Controller {
 	}
 
 	@DeleteMapping("/city/{id}")
-	//@ResponseStatus(HttpStatus.NO_CONTENT)
-	@ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void delete(@PathVariable long id) {
-		//service.delete(id);
+		service.delete(id);
 	}
 }
