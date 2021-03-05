@@ -46,45 +46,54 @@ public class MvcTest {
 
 	@Test
 	void patchWithNewCityShouldSaveAndReturn200WithSavedCityAsJson() throws Exception {
-		long id = 5;
-		CityDto city = new CityDto(id, "A", "B");
+		CityDto city = sampleCityDto();
 		when(service.update(any(CityDto.class), anyLong())).thenReturn(city);
 
-		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.patch("/city/" + id)
+		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.patch("/city/" + city.getId())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsBytes(city))
 				.accept(MediaType.APPLICATION_JSON)).andReturn();
 
 		assertEquals(result.getResponse().getStatus(), HttpStatus.OK.value());
 		assertEquals(result.getResponse().getContentType(), MediaType.APPLICATION_JSON_VALUE);
+
+		CityDto resultBody = objectMapper.readValue(result.getResponse().getContentAsByteArray(), CityDto.class);
+		assertEquals(resultBody, city);
 	}
 
 	@Test
 	void putWithNewCityShouldSaveAndReturn200WithSavedCityAsJson() throws Exception {
-		long id = 5;
-		CityDto city = new CityDto(id, "A", "B");
+		CityDto city = sampleCityDto();
 		when(service.replace(any(CityDto.class), anyLong())).thenReturn(city);
 
-		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.put("/city/" + id)
+		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.put("/city/" + city.getId())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsBytes(city))
 				.accept(MediaType.APPLICATION_JSON)).andReturn();
 
 		assertEquals(result.getResponse().getStatus(), HttpStatus.OK.value());
 		assertEquals(result.getResponse().getContentType(), MediaType.APPLICATION_JSON_VALUE);
+
+		CityDto resultBody = objectMapper.readValue(result.getResponse().getContentAsByteArray(), CityDto.class);
+		assertEquals(resultBody, city);
 	}
 
 	@Test
 	void postWithNewCityShouldSaveAndReturnWithID() throws Exception {
-		CityDto cityDto = new CityDto(0, "A", "B");
-		CityDto cityResult = new CityDto(231253, cityDto.getCity(), cityDto.getCountry());
-		when(service.create(cityDto)).thenReturn(cityResult);
+		CityDto cityDto = sampleCityDto();
+		CityDto expectedResult = sampleCityDto();
+		expectedResult.setId(cityDto.getId() + 20); // just so there's different id
+		when(service.create(cityDto)).thenReturn(expectedResult);
 
 		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/city")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsBytes(cityDto))).andReturn();
 
 		assertEquals(result.getResponse().getStatus(), HttpStatus.CREATED.value());
+		assertEquals(result.getResponse().getContentType(), MediaType.APPLICATION_JSON_VALUE);
+
+		CityDto resultBody = objectMapper.readValue(result.getResponse().getContentAsByteArray(), CityDto.class);
+		assertEquals(resultBody, expectedResult);
 	}
 
 	@Test
@@ -98,26 +107,47 @@ public class MvcTest {
 
 	@Test
 	void getWithIdShouldReturnOneAsJson() throws Exception {
-		when(service.findOne(1)).thenReturn(Optional.of(new CityDto(1, "A", "B")));
+		CityDto cityDto = sampleCityDto();
+		when(service.findOne(1)).thenReturn(Optional.of(cityDto));
 
 		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/city/1")
 				.accept(MediaType.APPLICATION_JSON)).andReturn();
 
 		assertEquals(result.getResponse().getStatus(), HttpStatus.OK.value());
 		assertEquals(result.getResponse().getContentType(), MediaType.APPLICATION_JSON_VALUE);
+
+		CityDto resultBody = objectMapper.readValue(result.getResponse().getContentAsByteArray(), CityDto.class);
+		assertEquals(resultBody, cityDto);
 	}
 
 	@Test
 	void getAllShouldReturnAllAsJson() throws Exception {
-		when(service.findAll()).thenReturn(List.of(
-				new CityDto(1, "A", "B"),
-				new CityDto(2, "C", "D")
-		));
+		List<CityDto> cityDtoList = sampleCityDtoList();
+		when(service.findAll()).thenReturn(cityDtoList);
 
 		MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/city")
 				.accept(MediaType.APPLICATION_JSON)).andReturn();
 
 		assertEquals(result.getResponse().getStatus(), HttpStatus.OK.value());
 		assertEquals(result.getResponse().getContentType(), MediaType.APPLICATION_JSON_VALUE);
+
+		CityDto[] resultBody = objectMapper.readValue(result.getResponse().getContentAsByteArray(), CityDto[].class);
+
+		assertEquals(cityDtoList.size(), resultBody.length);
+
+		for(int i = 0; i < cityDtoList.size(); ++i)
+			assertEquals(resultBody[i], cityDtoList.get(i));
+	}
+
+	private CityDto sampleCityDto() {
+		return new CityDto(5, "Paris", "France");
+	}
+
+	private List<CityDto> sampleCityDtoList() {
+		return List.of(
+				new CityDto(5, "Paris", "France"),
+				new CityDto(6, "Berlin", "Germany"),
+				new CityDto(5, "Tokyo", "Japan")
+		);
 	}
 }
