@@ -1,4 +1,4 @@
-package com.example.api.model.city;
+package com.example.api.model;
 
 public class City {
 
